@@ -1,20 +1,10 @@
 import React, { useState, useRef } from 'react'
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import { forgotModifySchema } from '../../validations/forgotModifySchema';
-import CustomInput from '../Form/CustomInput';
 import axios from '../../api/axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-const inputs = [
-  {
-    id:1,
-    name: 'newpassword',
-    type: 'password',
-    placeholder: 'Nouveau mot de passe',
-    autoComplete: 'off',
-    required: true,
-  },
-];
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faInfoCircle, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 
 const ForgotModifyForm = () => {
@@ -64,9 +54,48 @@ const ForgotModifyForm = () => {
         validationSchema={ forgotModifySchema }
         onSubmit={ handleSubmit }
       >
-       {(props) => (
+       {(values, errors, touched) => (
         <Form className='form forgot-form'>
-          { inputs.map((input) => (<CustomInput key={ input.id } { ...input } />))}
+          <label htmlFor='newpassword'>Nouveau mot de passe</label>
+              <div>
+                <Field 
+                  type='password' 
+                  name='newpassword' 
+                  id='newpassword'
+                  autoComplete='off'
+                  placeholder='Mot de passe'
+                  aria-invalid={ errors.newpassword ? 'false' : 'true' }
+                  ariadescribedby='newpasswordnote'
+                  />
+                { !touched.newpassword || values.newpassword === '' ?
+                  null : errors.newpassword && touched.newpassword ?
+                  <span><FontAwesomeIcon icon={ faTimes }/></span>
+                  : <span><FontAwesomeIcon icon={ faCheck }/></span> }
+                { errors.newpassword && touched.newpassword ? 
+                  (<div id='newpasswordnote'><FontAwesomeIcon icon={ faInfoCircle } />{ errors.newpassword }</div>) 
+                  : null}
+              </div>
+              
+              <label htmlFor='confirmpassword'>Confirmez votre nouveau mot de passe</label>
+              <div>
+                <Field 
+                  type='password' 
+                  name='confirmpassword' 
+                  id='confirmpassword'
+                  autoComplete='off'
+                  placeholder='Mot de passe'
+                  aria-invalid={ values.newpassword !== values.confirmpassword && touched.confirmpassword ? 'false' : 'true' }
+                  ariadescribedby='confirmpasswordnote'
+                  />
+                { !touched.newpassword || values.newpassword === '' ?
+                  null : values.newpassword !== values.confirmpassword && touched.confirmpassword ?
+                  <span><FontAwesomeIcon icon={ faTimes }/></span>
+                  : <span><FontAwesomeIcon icon={ faCheck }/></span> }
+                { values.newpassword !== values.confirmpassword && touched.confirmpassword ? 
+                  (<div id='confirmpasswordnote'><FontAwesomeIcon icon={ faInfoCircle } />Le mot de passe de confirmation est différent</div>) 
+                  : null}
+              </div>
+
           <button className='focus-button' type='submit'>Envoyer</button>
         </Form>
        )}

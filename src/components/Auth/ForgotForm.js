@@ -1,19 +1,9 @@
 import React, { useState, useRef } from 'react'
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import { forgotSchema } from '../../validations/forgotSchema';
-import CustomInput from '../Form/CustomInput';
 import axios from '../../api/axios';
-
-const inputs = [
-  {
-    id:1,
-    name: 'email',
-    type: 'email',
-    placeholder: 'Votre e-mail',
-    autoComplete: 'off',
-    required: true,
-  },
-];
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faInfoCircle, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 
 const ForgotForm = () => {
@@ -24,7 +14,6 @@ const ForgotForm = () => {
   const handleSubmit = async (values, actions) => {
 
     try {
-      console.log({...values});
       const response = await axios.post('auth/forgot',
       JSON.stringify({ ...values }),
       {
@@ -52,10 +41,29 @@ const ForgotForm = () => {
         validationSchema={ forgotSchema }
         onSubmit={ handleSubmit }
       >
-       {(props) => (
+       {(values, errors, touched) => (
         <Form className='form forgot-form'>
-          { inputs.map((input) => (<CustomInput key={ input.id } { ...input } />))}
-          <button className='focus-button' type='submit'>Envoyer</button>
+          <label htmlFor='email'>Adresse mail</label>
+            <div>
+              <Field 
+                type='email' 
+                name='email' 
+                id='email'
+                autoComplete='off'
+                placeholder='Email'
+                aria-invalid={ errors.email ? 'false' : 'true' }
+                ariadescribedby='emailnote'
+                />
+              { !touched.email || values.email === '' ? 
+                null : errors.email && touched.email ?
+                  <span><FontAwesomeIcon icon={ faTimes }/></span>
+                  : <span><FontAwesomeIcon icon={ faCheck }/></span> }
+              { errors.email && touched.email ? 
+                (<div id='emailnote'><FontAwesomeIcon icon={ faInfoCircle } />{ errors.email }</div>) 
+                : null}
+              </div>
+         
+          <button className='auth-link__focus' type='submit'>Envoyer</button>
         </Form>
        )}
       </Formik>

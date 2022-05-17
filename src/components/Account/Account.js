@@ -106,7 +106,7 @@ const Account = () => {
             <label htmlFor='email'>Adresse mail</label>
             <div>
               <Field 
-                type='text' 
+                type='email' 
                 name='email' 
                 id='email'
                 autoComplete='off'
