@@ -96,11 +96,8 @@ header {
   align-items: center;
 }
 
-.focus-button {
-  color:white;
-  background-color:rgb(16, 29, 68);
-}
 
-.form .focus-button {
-  display: inline-block;
+.auth-link__focus {
+  color: white;
+  background-color:rgb(16, 29, 68);
 }

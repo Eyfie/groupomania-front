@@ -11,22 +11,29 @@ const AuthPage = () => {
 
   useEffect( () => {
 
-    if (location?.pathname === '/') navigate('/login', { replace: true });
+    if (location?.pathname === '/') navigate('auth/login', { replace: true });
   
   }, [location, navigate])
 
   return (
     <>
-      <div className='auth-logo'>
-        <img src={GroupomaniaLogo} alt='logo groupomania'/>
-        <h1 className='auth-title'>Connectez vous à votre famille !</h1>
-      </div>
-      <nav className='auth-nav'>
-        <Link className='auth-link border' to='/login'> Se connecter</Link>
-        <Link className='auth-link border' to='/signup'> S'inscrire </Link>
-      </nav>
-      
-      <Outlet />
+      <main className='container'>
+        <div className='auth-logo'>
+          <img src={GroupomaniaLogo} alt='logo groupomania'/>
+          <h1 className='auth-title'>Connectez vous à votre famille !</h1>
+        </div>
+        <nav className='auth-nav'>
+          <Link 
+            className={`auth-link border ${ location?.pathname === '/auth/login' ? 'auth-link__focus' : null }`} 
+            to='/auth/login'>Se connecter</Link>
+          <Link 
+            className={`auth-link border ${ location?.pathname === '/auth/signup' ? 'auth-link__focus' : null }`} 
+            to='/auth/signup'>S'inscrire</Link>
+        </nav>
+        
+        <Outlet />
+        
+      </main>
     </>
   )
 }

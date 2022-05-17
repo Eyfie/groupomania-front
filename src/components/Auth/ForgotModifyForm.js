@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form } from 'formik';
 import { forgotModifySchema } from '../../validations/forgotModifySchema';
-import CustomInput from '../CustomInput';
+import CustomInput from '../Form/CustomInput';
 import axios from '../../api/axios';
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const inputs = [
   {
@@ -46,7 +46,7 @@ const ForgotModifyForm = () => {
       //console.log(response.data)
       if (!response) throw new Error('Le serveur ne répond pas ');
 
-      navigate('/login', { replace: true });
+      navigate('auth/login', { replace: true });
   
     } catch (error) {
       console.log(error);
