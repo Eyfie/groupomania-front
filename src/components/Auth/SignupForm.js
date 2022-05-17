@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form } from 'formik';
 import { signupSchema } from '../../validations/signupSchema';
-import CustomInput from '../CustomInput';
+import CustomInput from '../Form/CustomInput';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -73,7 +73,7 @@ const SignupForm = () => {
       console.log(response)
       if (!response) throw new Error('Le serveur ne répond pas ');
 
-      navigate('/login', { replace: true });
+      navigate('/auth/login', { replace: true });
   
     } catch (error) {
       console.log(error);

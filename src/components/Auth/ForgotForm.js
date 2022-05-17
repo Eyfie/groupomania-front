@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form } from 'formik';
 import { forgotSchema } from '../../validations/forgotSchema';
-import CustomInput from '../CustomInput';
+import CustomInput from '../Form/CustomInput';
 import axios from '../../api/axios';
 
 const inputs = [

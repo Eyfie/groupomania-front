@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext } from 'react'
 import { Formik, Form } from 'formik';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { loginSchema } from '../../validations/loginSchema';
-import CustomInput from '../CustomInput';
+import CustomInput from '../Form/CustomInput';
 import AuthContext from '../../contexts/AuthProvider';
 import axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth';
@@ -32,7 +32,7 @@ const LoginForm = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/home';
+  const from = location.state?.from?.pathname || '/';
 
   const errorRef = useRef();
 
@@ -54,8 +54,8 @@ const LoginForm = () => {
       console.log(response.data);
       if (!response) throw new Error('Le serveur ne répond pas ');
 
-      const {id, username, role, accessToken, refreshToken} = response?.data?.User
-      setAuth({ id, username, role, accessToken, refreshToken });
+      
+      setAuth({...response.data.User});
 
       navigate(from, { replace: true });
   

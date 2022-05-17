@@ -9,20 +9,19 @@ const Header = () => {
 
   const logOut = () => {
     setAuth({});
-    navigate('/login', { replace: true });
+    navigate('/auth/login', { replace: true });
   }
 
   return (
     <header>
         <div>
-          <Link to='/home'>
+          <Link to='/'>
             <img src={GroupomaniaLogo} alt='Logo Groupomania' />
           </Link>
         </div>
         <nav>
-          <Link to='/profil'>Profil</Link>
-          <Link to='/account'>Compte</Link>
-          <button onClick={logOut}>Log out</button>
+          <Link to='/profil/account'>Compte</Link>
+          <button onClick={ logOut }>Log out</button>
         </nav>
     </header>
   )

@@ -7,9 +7,11 @@ const CustomInput = (props) => {
 
   const[focus, setFocus] = useState(false);
   const [field, meta] = useField(props);
+  // console.log(field);
 
   return (
     <>
+      { props.label ? <label className={ props.label }>{props.label}</label> : null }
       <input 
         { ...field } 
         { ...props }
