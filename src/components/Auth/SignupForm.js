@@ -39,7 +39,8 @@ const SignupForm = () => {
   }
 
   return (
-    <section className='account'>
+    <section className='authentication auth-signup border'>
+      <h2 className='auth-title'>Créez votre compte Groupomania</h2>
       <Formik 
         initialValues={{ username: '', firstname: '', lastname: '', email: '', password: '' }}
         validationSchema={ signupSchema }
@@ -47,18 +48,17 @@ const SignupForm = () => {
       >
 
        { ({ values, errors, touched }) => (
-        <Form className='form account-form'>
+        <Form className='form'>
           <div>
-            <h2>Informations du profil</h2>
-
             <label htmlFor='username'>Nom d'utilisateur</label>
             <div>
-              <Field 
+              <Field
+                className='border'
                 type='text' 
                 name='username' 
                 id='username'
                 autoComplete='off'
-                placeholder='Votre pseudo'
+                placeholder='Pseudo'
                 aria-invalid={ errors.username ? 'false' : 'true' }
                 ariadescribedby='usernamenote'
                 />
@@ -73,11 +73,12 @@ const SignupForm = () => {
 
             <label htmlFor='firstname'>Prénom</label>
             <div>
-              <Field 
+              <Field
+                className='border'
                 type='text' 
                 name='firstname' 
                 id='firstname'
-                placeholder='Votre prénom'
+                placeholder='Prénom'
                 aria-invalid={ errors.firstname ? 'false' : 'true' }
                 ariadescribedby='firstnamenote'
                 />
@@ -94,10 +95,11 @@ const SignupForm = () => {
               <label htmlFor='lastname'>Nom</label>
               <div>
                 <Field 
+                  className='border'
                   type='text' 
                   name='lastname' 
                   id='lastname'
-                  placeholder='Votre nom'
+                  placeholder='Nom'
                   aria-invalid={ errors.lastname ? 'false' : 'true' }
                   ariadescribedby='lastnamenote'
                   />
@@ -113,6 +115,7 @@ const SignupForm = () => {
               <label htmlFor='email'>Adresse mail</label>
               <div>
                 <Field 
+                  className='border'
                   type='email' 
                   name='email' 
                   id='email'
@@ -135,16 +138,17 @@ const SignupForm = () => {
             <label htmlFor='password'>Mot de passe actuel</label>
             <div>
               <Field 
+                className='border'
                 type='password' 
                 name='password' 
                 id='password' 
-                placeholder='Votre mot de passe'
+                placeholder='Mot de passe'
                 autoComplete='off'
                 required
                 aria-invalid={ errors.password ? 'false' : 'true' }
                 ariadescribedby='passwordnote'
                 />
-                { errors.newpassword && touched.newpassword ?
+                { errors.password && touched.password ?
                   <span><FontAwesomeIcon icon={ faTimes }/></span>
                   : <span><FontAwesomeIcon icon={ faCheck }/></span> }
                 { errors.password && touched.password ? 

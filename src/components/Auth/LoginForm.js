@@ -1,30 +1,12 @@
-import React, { useState, useRef, useContext } from 'react'
-import { Formik, Form } from 'formik';
+import React, { useState, useRef } from 'react'
+import { Formik, Form, Field } from 'formik';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { loginSchema } from '../../validations/loginSchema';
-import CustomInput from '../Form/CustomInput';
-import AuthContext from '../../contexts/AuthProvider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+// import AuthContext from '../../contexts/AuthProvider';
 import axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth';
-
-const inputs = [
-  {
-    id:1,
-    name: 'username',
-    type: 'text',
-    placeholder: 'Pseudo',
-    autoComplete: 'off',
-    required: true,
-  },
-  {
-    id:2,
-    name: 'password',
-    type: 'password',
-    placeholder: 'Mot de passe',
-    autoComplete: 'off',
-    required: true,
-  },
-];
 
 
 const LoginForm = () => {
@@ -74,10 +56,43 @@ const LoginForm = () => {
         validationSchema={ loginSchema }
         onSubmit={ handleSubmit }
       >
-       {(props) => (
+       {({ values, errors, touched }) => (
         <Form className='form login-form'>
-          { inputs.map((input) => (<CustomInput key={ input.id } { ...input } />))}
-          <button className='focus-button' type='submit'>Se connecter</button>
+          
+          <label htmlFor='username'>Nom d'utilisateur</label>
+          <div>
+            <Field
+              className='border'
+              type='text' 
+              name='username' 
+              id='username'
+              autoComplete='off'
+              placeholder='Pseudo'
+              aria-invalid={ errors.username ? 'false' : 'true' }
+              ariadescribedby='usernamenote'
+              />
+               { errors.username && touched.username ? 
+                  (<div id='usernamenote'><FontAwesomeIcon icon={ faInfoCircle } />{ errors.username }</div>) 
+                  : null}
+          </div>
+
+          <label htmlFor='password'>Mot de passe</label>
+          <div>
+            <Field
+              className='border'
+              type='password' 
+              name='password' 
+              id='password'
+              autoComplete='off'
+              placeholder='Mot de passe'
+              aria-invalid={ errors.password ? 'false' : 'true' }
+              ariadescribedby='passwordnote'
+              />
+               { errors.password && touched.password ? 
+                  (<div id='passwordnote'><FontAwesomeIcon icon={ faInfoCircle } />{ errors.password }</div>) 
+                  : null}
+          </div>
+          <button className='auth-link__focus'type='submit'>Se connecter</button>
         </Form>
        )}
       </Formik>
