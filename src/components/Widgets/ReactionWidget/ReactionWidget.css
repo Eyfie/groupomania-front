@@ -1,0 +1,15 @@
+.reaction-widget {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.reaction-widget__reaction {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.reaction-widget__reaction .selected {
+  color:coral;
+}

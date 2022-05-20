@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form, Field } from 'formik';
-import { forgotSchema } from '../../validations/forgotSchema';
-import axios from '../../api/axios';
+import { forgotSchema } from '../../../validations/forgotSchema';
+import axios from '../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faInfoCircle, faCheck } from '@fortawesome/free-solid-svg-icons';
 
@@ -41,28 +41,29 @@ const ForgotForm = () => {
         validationSchema={ forgotSchema }
         onSubmit={ handleSubmit }
       >
-       {(values, errors, touched) => (
+       { ({ values, errors, touched }) => (
         <Form className='form forgot-form'>
           <label htmlFor='email'>Adresse mail</label>
-            <div>
-              <Field 
-                type='email' 
-                name='email' 
-                id='email'
-                autoComplete='off'
-                placeholder='Email'
-                aria-invalid={ errors.email ? 'false' : 'true' }
-                ariadescribedby='emailnote'
-                />
-              { !touched.email || values.email === '' ? 
+          <div>
+            <Field 
+              className='border'
+              type='email' 
+              name='email' 
+              id='email'
+              required
+              placeholder='exemple@gmail.com'
+              aria-invalid={ errors.email ? 'false' : 'true' }
+              ariadescribedby='emailnote'
+              />
+
+              { !touched.email || values.email === '' ?
                 null : errors.email && touched.email ?
-                  <span><FontAwesomeIcon icon={ faTimes }/></span>
-                  : <span><FontAwesomeIcon icon={ faCheck }/></span> }
+                <span><FontAwesomeIcon icon={ faTimes }/></span>
+                : <span><FontAwesomeIcon icon={ faCheck }/></span> }
               { errors.email && touched.email ? 
                 (<div id='emailnote'><FontAwesomeIcon icon={ faInfoCircle } />{ errors.email }</div>) 
                 : null}
-              </div>
-         
+            </div>
           <button className='auth-link__focus' type='submit'>Envoyer</button>
         </Form>
        )}

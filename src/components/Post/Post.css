@@ -1,0 +1,25 @@
+.post {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.post-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-footer__interactions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

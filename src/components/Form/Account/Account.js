@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { Formik, Form, Field } from 'formik'
-import axios from '../../api/axios'
-import useAuth from '../../hooks/useAuth'
+import axios from '../../../api/axios'
+import useAuth from '../../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
-import { accountSchema } from '../../validations/accountSchema'
+import { accountSchema } from '../../../validations/accountSchema'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faCheck,faTimes } from '@fortawesome/free-solid-svg-icons'
 
@@ -15,7 +15,6 @@ const Account = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const { auth, setAuth } = useAuth();
-  
 
   const handleSubmit = async (values, actions) => {
     try {
@@ -59,7 +58,7 @@ const Account = () => {
         if (!response) throw new Error('Le serveur ne répond pas');
 
         await setAuth({});
-        navigate('/auth/signup', { replace: true });
+        navigate('/signup', { replace: true });
         
       }
     } catch (error) {

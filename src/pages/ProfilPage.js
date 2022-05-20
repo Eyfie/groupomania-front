@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import Header from '../components/Header'
 
 const ProfilPage = () => {
+
   return (
     <>
       <Header />
@@ -10,7 +11,7 @@ const ProfilPage = () => {
         <h1 className='title-h1'>Paramètre de votre compte</h1>
         <nav>
           <Link to='account'>Compte</Link>
-          <Link to='edit'>Profil</Link>
+          <Link to='profil'>Profil</Link>
         </nav>
 
         <Outlet />

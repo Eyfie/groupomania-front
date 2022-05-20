@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form, Field } from 'formik';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { loginSchema } from '../../validations/loginSchema';
+import { loginSchema } from '../../../validations/loginSchema';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 // import AuthContext from '../../contexts/AuthProvider';
-import axios from '../../api/axios';
-import useAuth from '../../hooks/useAuth';
+import axios from '../../../api/axios';
+import useAuth from '../../../hooks/useAuth';
 
 
 const LoginForm = () => {

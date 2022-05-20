@@ -6,7 +6,7 @@ yup.setLocale({
         required: `Ce champ est requis`,
     },
     string: {
-      email: 'Ce champ doit être un e-mail valide'
+      email: 'Ce champ doit être un e-mail valide',
     }
 });
 

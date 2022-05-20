@@ -1,15 +1,33 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from '../api/axios';
 import GroupomaniaLogo from '../assets/logo/icon-left-font-monochrome-black.svg'
 import useAuth from '../hooks/useAuth';
 
 const Header = () => {
   let navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   const logOut = () => {
-    setAuth({});
-    navigate('/auth/login', { replace: true });
+    
+    const terminateToken = async () => {
+      try {
+        const response = await axios.get('/logout', 
+        {
+          headers: {'Access-Control-Allow-Origin' : 'http://localhost:3000',
+          'Authorization': `Bearer ${auth?.accessToken}`,
+          },
+          withCredentials: true,
+        });
+        if (!response) throw new Error('Le serveur ne répond pas');
+        setAuth({});
+          
+      } catch (error)  {
+        console.log(error)
+      }   
+    }
+    terminateToken();
+    navigate('/login', { replace: true });
   }
 
   return (
@@ -20,7 +38,7 @@ const Header = () => {
           </Link>
         </div>
         <nav>
-          <Link to='/profil/account'>Compte</Link>
+          <Link to='/account'>Compte</Link>
           <button onClick={ logOut }>Log out</button>
         </nav>
     </header>

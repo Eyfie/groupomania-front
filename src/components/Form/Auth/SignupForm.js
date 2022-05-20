@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form, Field } from 'formik';
-import { signupSchema } from '../../validations/signupSchema';
+import { signupSchema } from '../../../validations/signupSchema';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faInfoCircle, faCheck } from '@fortawesome/free-solid-svg-icons';
-import axios from '../../api/axios';
+import axios from '../../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -29,7 +29,7 @@ const SignupForm = () => {
       console.log(response)
       if (!response) throw new Error('Le serveur ne répond pas ');
 
-      navigate('/auth/login', { replace: true });
+      navigate('/login', { replace: true });
   
     } catch (error) {
       console.log(error);
@@ -135,7 +135,7 @@ const SignupForm = () => {
 
            
 
-            <label htmlFor='password'>Mot de passe actuel</label>
+            <label htmlFor='password'>Mot de passe</label>
             <div>
               <Field 
                 className='border'
@@ -148,9 +148,10 @@ const SignupForm = () => {
                 aria-invalid={ errors.password ? 'false' : 'true' }
                 ariadescribedby='passwordnote'
                 />
-                { errors.password && touched.password ?
-                  <span><FontAwesomeIcon icon={ faTimes }/></span>
-                  : <span><FontAwesomeIcon icon={ faCheck }/></span> }
+                { !touched.password || values.password === '' ?
+                  null : errors.password && touched.password ?
+                    <span><FontAwesomeIcon icon={ faTimes }/></span>
+                    : <span><FontAwesomeIcon icon={ faCheck }/></span> }
                 { errors.password && touched.password ? 
                   (<div id='passwordnote'><FontAwesomeIcon icon={ faInfoCircle } />{ errors.password }</div>) 
                   : null}

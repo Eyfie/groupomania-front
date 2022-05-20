@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react';
+import useAuth from '../hooks/useAuth';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import GroupomaniaLogo from '../assets/logo/auth-logo.svg';
 import { useNavigate } from 'react-router-dom';
 
 
 const AuthPage = () => {
-
+  const {auth} = useAuth()
   let navigate = useNavigate();
   let location = useLocation();
 
   useEffect( () => {
 
-    if (location?.pathname === '/') navigate('auth/login', { replace: true });
+    if (location?.pathname === '/' && !auth) navigate('/login', { replace: true });
   
-  }, [location, navigate])
+  }, [location, navigate, auth])
 
   return (
     <>
@@ -24,11 +25,11 @@ const AuthPage = () => {
         </div>
         <nav className='auth-nav'>
           <Link 
-            className={`auth-link border ${ location?.pathname === '/auth/login' ? 'auth-link__focus' : null }`} 
-            to='/auth/login'>Se connecter</Link>
+            className={`auth-link border ${ location?.pathname === '/login' ? 'auth-link__focus' : null }`} 
+            to='/login'>Se connecter</Link>
           <Link 
-            className={`auth-link border ${ location?.pathname === '/auth/signup' ? 'auth-link__focus' : null }`} 
-            to='/auth/signup'>S'inscrire</Link>
+            className={`auth-link border ${ location?.pathname === '/signup' ? 'auth-link__focus' : null }`} 
+            to='/signup'>S'inscrire</Link>
         </nav>
         
         <Outlet />

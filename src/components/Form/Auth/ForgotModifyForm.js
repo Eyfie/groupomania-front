@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Formik, Form, Field } from 'formik';
-import { forgotModifySchema } from '../../validations/forgotModifySchema';
-import axios from '../../api/axios';
+import { forgotModifySchema } from '../../../validations/forgotModifySchema';
+import axios from '../../../api/axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faInfoCircle, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -36,7 +36,7 @@ const ForgotModifyForm = () => {
       //console.log(response.data)
       if (!response) throw new Error('Le serveur ne répond pas ');
 
-      navigate('auth/login', { replace: true });
+      navigate('/login', { replace: true });
   
     } catch (error) {
       console.log(error);
@@ -50,11 +50,11 @@ const ForgotModifyForm = () => {
     <section className='authentication border'>
       <h1>Changez de mot de passe</h1>
       <Formik 
-        initialValues={{ newpassword: '' }}
+        initialValues={{ newpassword: '', confirmpassword: ''}}
         validationSchema={ forgotModifySchema }
         onSubmit={ handleSubmit }
       >
-       {(values, errors, touched) => (
+       { ({ values, errors, touched }) => (
         <Form className='form forgot-form'>
           <label htmlFor='newpassword'>Nouveau mot de passe</label>
               <div>

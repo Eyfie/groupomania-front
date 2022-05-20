@@ -12,10 +12,10 @@ code {
     monospace;
 }
 
-
 input {
   padding: 0.5rem 1rem;
 }
+
 .hide {
   display: none;
 }
@@ -100,4 +100,9 @@ header {
 .auth-link__focus {
   color: white;
   background-color:rgb(16, 29, 68);
+}
+
+.user-avatar__img {
+  clip-path: circle();
+  height:200px;
 }
