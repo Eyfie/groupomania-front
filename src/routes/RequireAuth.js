@@ -22,7 +22,6 @@ const RequireAuth = ({ allowedRoles }) => {
     ping()
   }, [axiosPrivate, setAuth])
 
-  console.log(auth);
   return (
     allowedRoles.includes(auth?.role)
       ? <Outlet /> 
