@@ -24,5 +24,4 @@ REACT_APP_CLIENT_URL=http://localhost:3000
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-
 ### You can now freely navigate through the app !
