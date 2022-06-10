@@ -1,13 +1,13 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL: 'http://localhost:3001/api',
+    baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
 });
 
 export const axiosPrivate = axios.create({
-    baseURL: 'http://localhost:3001/api',
+    baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
     headers: {
-        'Access-Control-Allow-Origin' : 'http://localhost:3000'
+        'Access-Control-Allow-Origin' : `${process.env.REACT_APP_CLIENT_URL}`,
     },
     withCredentials: true,
 });
