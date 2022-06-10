@@ -1,108 +1,21 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-input {
-  padding: 0.5rem 1rem;
-}
-
-.hide {
-  display: none;
-}
-
-.offscreen {
-  position:absolute;
-  top: -9999px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
-  gap: 16px 24px;
-}
-
-
-.fa-circle-info {
-  color:rgb(4, 4, 119);
-  font-size: 0.7rem;
-}
-
-.authentication {
-  padding: 2rem;
-  margin-inline: 20vw;
-  margin-top: 1.5rem;
-}
-
-
-.auth-title {
-  text-align: center;
-}
-
-.auth-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap:2rem;
-  margin-top: 1.5rem;
-}
-
-.auth-link {
-  display: flex;
-  width: 10rem;
-  justify-content: center;
-  align-items: center;
-  padding: 0.4rem;
-}
-.auth-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.auth-logo img {
-  max-height: 20rem;
-}
-
-.border {
-  border-radius: 4px;
-  border-color: rgb(16, 29, 68);
-  border-width: 1px;
-  border-style: solid;
-}
-
-.wrong-input {
-  border-color:red;
-}
-
-.valid-input{
-  border-color:green;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-.auth-link__focus {
-  color: white;
-  background-color:rgb(16, 29, 68);
-}
-
-.user-avatar__img {
-  clip-path: circle();
-  height:200px;
+@layer components {
+  .basic-input {
+    @apply 
+      mt-1 
+      block 
+      w-full
+      border
+      border-gray-300
+      rounded 
+      bg-gray-100 
+      focus:bg-white
+      focus:ring
+      focus:ring-gray-500
+      focus:border-gray-500
+      focus:ring-opacity-20
+  }
 }
