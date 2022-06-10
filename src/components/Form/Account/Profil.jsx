@@ -7,9 +7,13 @@ import { profilSchema } from '../../../validations/accountSchema'
 import PreviewImage from '../../Layouts/PreviewImage';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { toast } from 'react-toastify';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const Profil = () => {
+
+  const navigate = useNavigate();
+  const location = useLocation()
 
   const avatarRef = useRef();
   const { auth, setAuth } = useAuth();
@@ -35,8 +39,8 @@ const Profil = () => {
   })
 
   const updateWithAvatar = async (data, id) => {
-    let formData = new FormData();
-
+      try {
+        let formData = new FormData();
         for (const [key, value] of Object.entries(data)) {
           if (key === 'avatar') formData.append('avatar', value[0])
           formData.append(`${key}`, value);
@@ -47,26 +51,35 @@ const Profil = () => {
             {
               headers: { 'Content-Type': 'multipart/form-data' },
             });
-
         if (!response) throw new Error('Le serveur ne répond pas');
 
         reset()
         setImage(null);
         toast.success(`Compte mis à jour !`);
         return setAuth({ ...auth, ...response.data.User });
+      } catch (error) {
+        if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+        navigate('/login', { state: { from: location}, replace: true })
+      }
+        
   }
 
   const updateWithoutAvatar = async (data, id) => {
-    const response = await axiosPrivate.patch(`/user/${id}`,
-      JSON.stringify(data),
-      {
-        headers: { 'Content-Type': 'application/json'},
-      });
+    try {
+      const response = await axiosPrivate.patch(`/user/${id}`,
+        JSON.stringify(data),
+        {
+          headers: { 'Content-Type': 'application/json'},
+        });
       if (!response) throw new Error('Le serveur ne répond pas');
 
-      toast.success(`Compte mis à jour !`);
       reset()
+      toast.success(`Compte mis à jour !`);
       setAuth({...auth, ...response.data.User});
+    } catch (error) {
+      if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+      navigate('/login', { state: { from: location}, replace: true })
+    }
   }
 
   const onSubmit = async (data) => {
@@ -94,7 +107,7 @@ const Profil = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className='space-y-3'>
-          <h2 className='font-ibm font-semibold uppercase border-b border-orange-500'>Informations du profil</h2>
+          <h2 className='font-ibm font-semibold uppercase border-b border-grouporange-900'>Informations du profil</h2>
           <div className='flex flex-col mob:flex-row gap-3'>
             <div className='flex-1'>
               <label htmlFor='firstname'>Prénom</label>
@@ -138,7 +151,7 @@ const Profil = () => {
           </div>
         </div>
         <div className='flex-1'>
-          <h2 className='font-ibm font-semibold uppercase border-b border-orange-500'>Avatar</h2>
+          <h2 className='font-ibm font-semibold uppercase border-b border-grouporange-900'>Avatar</h2>
           <div className='mt-6 flex flex-col'>
             <div className='rounded-full h-64 w-64 flex mx-auto'>
               {image ?
@@ -151,7 +164,7 @@ const Profil = () => {
               <div className={ `relative flex ${ image ? 'flex-1' : '' }` }>
                 <button 
                   type='button'
-                  className={`mt-6 bg-slate-900 p-2 rounded-full w-100% ${ image ? 'flex-1' : '' } ` }
+                  className={`mt-6 gray-button p-2 rounded-full w-100% ${ image ? 'flex-1' : '' } ` }
                 >
                   Changer d'avatar
                 </button>
@@ -159,6 +172,7 @@ const Profil = () => {
                   {...register('avatar')}
                   className='absolute inset-0 opacity-0 cursor-pointer'
                   type='file'
+                  accept='image/jpg, image/jpeg, image/png, image/webp, image/gif, image/svg'
                   name='avatar'
                   ref={avatarRef}
                   onChange={ (e) => {
@@ -169,7 +183,7 @@ const Profil = () => {
               </div>
               {image ?
                 <button 
-                  className='mt-6 flex-1 bg-orange-500 p-2 rounded-full'
+                  className='mt-6 flex-1 orange-button hover-button p-2 rounded-full'
                   type='button'
                   onClick={ () => {
                     avatarRef.current.value = null;
@@ -187,7 +201,7 @@ const Profil = () => {
         <hr  className='mob:hidden'/>
         <div className='st:basis-full mx-auto'>
           <button 
-              className='rounded-full bg-slate-900 text-white p-2 flex-1 mob:mt-4'
+              className='rounded-full gray-button hover-button p-2 flex-1 mob:mt-4'
               type='submit'
             >
               Enregistrer les changements

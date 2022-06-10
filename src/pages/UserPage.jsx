@@ -1,15 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Layouts/Header'
 import Avatar from '../components/Widgets/AvatarWidget';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import Post from '../components/Layouts/Post';
-import { useParams } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ArrowSmRightIcon } from '@heroicons/react/solid';
 
 const UserPage = () => {
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const axiosPrivate = useAxiosPrivate();
   const [ posts, setPosts ] = useState([]);
   const [user, setUser] = useState({});
@@ -24,7 +28,11 @@ const UserPage = () => {
         if (response && response.data) setUser(response.data.User)
 
       } catch (error) {
-        console.log(error); 
+        if (error.response.status === 404) {
+          toast.error(`Cet utilisateur n'existe pas`)
+          return navigate('/', { replace: true })
+        }
+        navigate('/login', { state: { from: location}, replace: true })
       }
     }
 
@@ -40,13 +48,11 @@ const UserPage = () => {
         if (response && response.data) {
          
           const userPosts = response.data.Posts.filter((post) => post.UserId === parseInt(userId, 10))
-
           setPosts(userPosts);
         }
 
-
       } catch (error) {
-        console.log(error)
+        navigate('/login', { state: { from: location}, replace: true })
       }
     }
     fetchPosts(userId);
@@ -57,8 +63,8 @@ const UserPage = () => {
   return (
     <>
       <Header />
-      <main className={`bg-gray-200 flex flex-col gap-3 ${posts.length > 2 ? 'h-full' : 'h-screen'}`}>
-        <div className='flex bg-orange-500 rounded-b'>
+      <main className={`bg-gray-200 flex flex-col gap-3 min-h-screen h-full`}>
+        <div className='flex bg-grouporange-900 rounded-b'>
           <div className='px-5 mt-24 bg-white flex flex-1 flex-col rounded-b'>
             <div className='flex pb-3'>
               <div className='mt-[-4rem]'>
@@ -77,7 +83,7 @@ const UserPage = () => {
           </div>
         </div>
 
-        <div className='flex flex-col max-w-5xl mx-auto'>
+        <div className='flex flex-col max-w-5xl w-screen mx-auto'>
            {posts.length === 0 ? 
             <div>
               <p className='text-center mt-16 font-ibm text-xl font-semibold text-gray-400'>{user.username} n'a pas encore posté de contenu !</p>

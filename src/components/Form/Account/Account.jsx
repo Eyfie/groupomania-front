@@ -3,7 +3,7 @@ import React from 'react'
 import useAuth from '../../../hooks/useAuth'
 import { useForm } from 'react-hook-form'
 import { yupResolver }  from '@hookform/resolvers/yup'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { InformationCircleIcon } from '@heroicons/react/solid'
 import { accountSchema } from '../../../validations/accountSchema'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
@@ -11,7 +11,8 @@ import { toast } from 'react-toastify'
 
 const Account = () => {
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
@@ -34,22 +35,27 @@ const Account = () => {
   })
 
   const deleteAccount = async (data, id) => {
-    
-    const response = await axiosPrivate.delete(`/user/${auth.id}`,
-    {
-      headers: { 'Content-Type': 'application/json' },
-      data : JSON.stringify({ ...data }),
-    });
-    if (!response) throw new Error('Le serveur ne répond pas');
+    try {
+      const response = await axiosPrivate.delete(`/user/${auth.id}`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          data : JSON.stringify({ ...data }),
+        });
+      if (!response) throw new Error('Le serveur ne répond pas');
 
-    await setAuth({});
-    toast.success(`Votre compte a été supprimé !`);
-    reset();
-    navigate('/signup', { replace: true });
+      await setAuth({});
+      reset();
+      toast.success(`Votre compte a été supprimé !`);
+      navigate('/signup', { replace: true });
+      
+    } catch (error) {
+      if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+      navigate('/login', { state: { from: location}, replace: true });
+    }  
   }
 
   const updateAccount = async (data, id) => {
-      
+    try {
       delete data.confirmpassword;
 
       for (const key in data) {
@@ -62,33 +68,33 @@ const Account = () => {
         {
           headers: { 'Content-type' : 'application/json' }
         });
-
       if (!response) throw new Error('Le serveur ne répond pas');
+
 
       delete data.password
       delete data.newpassword
 
-      toast.success(`Votre compte a été mis à jour`);
       reset();
+      toast.success(`Votre compte a été mis à jour`);
       setAuth({...auth, ...data})
+
+    } catch (error) {
+      if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+      navigate('/login', { state: { from: location}, replace: true });
+    }  
   }
   
-  const onSubmit = async (data) => {
-    try {
+  const onSubmit = (data) => {
     const selectedButton = document.activeElement.dataset.flag;
 
     if (selectedButton === 'update') return updateAccount(data, auth.id);
     if (selectedButton === 'delete') return deleteAccount(data, auth.id);
-     
-    } catch (error) {
-        console.log(error)
-    }
   };
 
 
   return (
     <section className='mx-2 ft:mx-8 space-y-3'>
-      <h2 className='font-ibm font-semibold uppercase border-b border-orange-500'>Information de votre compte</h2>
+      <h2 className='font-ibm font-semibold uppercase border-b border-grouporange-900'>Information de votre compte</h2>
       <form 
         className='space-y-3'
         onSubmit={handleSubmit(onSubmit)}>
@@ -190,14 +196,14 @@ const Account = () => {
 
         <div className='flex gap-2 mt-10'>
           <button 
-          className='flex-1 w-full rounded-full bg-slate-800 text-white p-2'
+          className='flex-1 w-full rounded-full p-2 gray-button hover-button'
           type='submit'
           data-flag='update'
           >
             Enregistrer les changements
           </button>
           <button 
-          className='flex-1 w-full rounded-full bg-orange-500 text-white p-2'
+          className='flex-1 w-full rounded-full orange-button p-2 hover-button'
           type='submit' 
           data-flag='delete'
          >

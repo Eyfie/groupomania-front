@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import CreatePost from '../components/Form/Post/CreatePost'
@@ -10,6 +11,8 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const HomePage = () => {
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const [posts, setPosts] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
@@ -23,7 +26,7 @@ const HomePage = () => {
 
 
       } catch (error) {
-        console.log(error)
+        navigate('/login', { state: { from: location}, replace: true })
       }
     }
     fetchPosts();
@@ -32,7 +35,7 @@ const HomePage = () => {
   return (
     <>
       <Header />
-      <main className={`bg-gray-200 flex st:px-3 py-5 ${posts.length > 3 ? 'h-full' : 'h-screen'}`}>
+      <main className={`bg-gray-200 flex st:px-3 py-5 min-h-screen h-full`}>
         <div className='flex mx-auto max-w-5xl'>
           <section className={`flex flex-col gap-3 st:max-w-2xl w-screen px-1`}>
             <CreatePost setPosts={setPosts}/>

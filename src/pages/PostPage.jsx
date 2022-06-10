@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect} from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Header from '../components/Layouts/Header'
 import UserWidget from '../components/Widgets/UserWidget'
 import ReactionWidget from '../components/Widgets/ReactionWidget'
@@ -19,13 +20,15 @@ import useAuth from '../hooks/useAuth'
 const PostPage = () => {
 
   let { postId } = useParams();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [ post, setPost ] = useState([]);
   const [ comments, setComments ] = useState([]);
   const [ reactions, setReactions ] = useState([]);
+  const [ reports, setReports ] = useState([])
   const [ editMode, setEditMode ] = useState(false);
   
 
@@ -39,10 +42,12 @@ const PostPage = () => {
           setPost(response.data.Post);
           setComments(response.data.Post.Comments);
           setReactions(response.data.Post.Reactions);
+          setReports(response.data.Post.Reports);
         }
       } catch (error) {
-        console.log(error);
         if (error.response.status === 404) navigate('/', { replace: true })
+        navigate('/login', { state: { from: location}, replace: true })
+        
       }
       
     }
@@ -70,7 +75,7 @@ const PostPage = () => {
 
 
   return (
-    <div className='bg-gray-200 h-full pb-3'>
+    <div className='bg-gray-200 min-h-screen h-full pb-3'>
       <Header />
       <div className='max-w-5xl mx-auto space-y-3 mt-3'>
         <article className='flex flex-col p-6 border rounded border-slate-400 bg-white hover:border-slate-900 ease-in-out duration-100 shadow-sm'>
@@ -79,7 +84,7 @@ const PostPage = () => {
               <TimeWidget createdAt={post.createdAt} updatedAt={post.updatedAt} />
             </div>
             {editMode ? 
-              <EditPost id={post.id} title={post.title} textcontent={post.textcontent} media={post.media} User={post.User} UserId={post.UserId} edit={modify} setPosts={setPost}/>
+              <EditPost id={post.id} title={post.title} textcontent={post.textcontent} media={post.media} User={post.User} UserId={post.UserId} edit={modify} setPost={setPost} postPage/>
               :
               <div className='py-4 '>
                 <h2 className='font-ibm text-xl font-bold'>{post.title }</h2>
@@ -116,7 +121,7 @@ const PostPage = () => {
                 </p>
                 <TrashIcon className='h-6 w-6 cursor-pointer hover:text-slate-900 ease-in-out duration-300' onClick={() => deletePost() } />
               </div> 
-              : <div className=''><ReportWidget Reports={post.Reports} entity='post' id={post.id} /></div>}
+              : <div className=''><ReportWidget setReports={setReports} Reports={reports} entity='post' id={post.id} /></div>}
             </div>
           </article>
         <CreateComment postId={ postId } setComments={setComments}/>

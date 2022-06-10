@@ -8,12 +8,16 @@ import { postSchema } from '../../../validations/postSchema';
 import PreviewImage from '../../Layouts/PreviewImage';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 
 
 const CreatePost = ({ setPosts }) => {
 
+
+  const navigate = useNavigate();
+  const location = useLocation();
   
   
   const { auth } = useAuth();
@@ -77,14 +81,13 @@ const CreatePost = ({ setPosts }) => {
 
       toast.success('Post créé !')
       reset();
-      setPosts((prev) => [{...response.data.Post, User: auth}, ...prev]);
+      return setPosts((prev) => [{...response.data.Post, User: auth}, ...prev]);
       
 
 
     } catch (error) {
       console.log(error);
-      // if (!error.response) setErrorMsg('Le serveur ne répond pas.')
-      // if (error.response?.status) setErrorMsg(`Erreur ${ error.response.status } : ${ error.response.data.message ? error.response.data.message : error.response.statusText }`)
+      navigate('/login', { state: { from: location}, replace: true })
     }
   }
 
@@ -105,7 +108,7 @@ const CreatePost = ({ setPosts }) => {
           placeholder='Créez votre post en entrant votre titre'
           className='basic-input truncate'
         />
-        <p>{errors.title?.message}</p>
+        <p className='flex items-start'>{errors.title?.message}</p>
       </div>
 
       {watch('title') && (
@@ -133,10 +136,11 @@ const CreatePost = ({ setPosts }) => {
                   </div>
                   <div className='flex-col space-y-2 justify-center'>
                     <div className='relative flex'>
-                      <button type='button' className='flex-1 bg-slate-900 rounded-full px-3 py-1 text-white'>{image ? `Changer d'image` : 'Ajouter une image'}</button>
+                      <button type='button' className='flex-1 rounded-full px-3 py-1 gray-button'>{image ? `Changer d'image` : 'Ajouter une image'}</button>
                       <input
                         {...register('media')}
                         type='file'
+                        accept='image/jpg, image/jpeg, image/png, image/webp, image/gif, image/svg'
                         name='media'
                         className='absolute inset-0 opacity-0 cursor-pointer'
                         onChange={ (e) => setImage(e.target.files[0]) } 
@@ -146,7 +150,7 @@ const CreatePost = ({ setPosts }) => {
                     {image && (
                       <div className='flex'>
                         <button 
-                            className='flex-1 bg-orange-500 rounded-full text-white px-3 py-1'
+                            className='flex-1 orange-button hover-button rounded-full px-3 py-1'
                             type='button' 
                             onClick={() => deleteImage()}
                           >
@@ -161,13 +165,13 @@ const CreatePost = ({ setPosts }) => {
           <div className='flex items-center gap-2 mt-2'>
             <button 
               type='submit'
-              className='flex-1 w-full rounded-full bg-slate-800 text-white p-2' 
+              className='flex-1 w-full rounded-full gray-button hover-button p-2' 
               disabled={isSubmitting ? true : false}
             > 
               Créez votre post
             </button>
             <button
-              className='flex-1 w-full rounded-full bg-orange-500 text-white p-2'
+              className='flex-1 w-full rounded-full orange-button hover-button p-2'
               type='button' 
               onClick={() => { 
                 reset({ title: '', textcontent: '', media: null});

@@ -7,11 +7,15 @@ import { PhotographIcon } from '@heroicons/react/outline'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { postSchema } from '../../../validations/postSchema'
 import { toast } from 'react-toastify'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 
 
-const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPosts }) => {
+const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPosts, setPost, postPage}) => {
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const mediaRef = useRef();
   const axiosPrivate = useAxiosPrivate();
   const [image, setImage] = useState(null);
@@ -35,63 +39,81 @@ const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPost
     }
   })
 
-  const post = {id, title, textcontent, media, User, UserId};
 
   const deletePostImage = async (data, id) => {
+    try {
+      const response = await axiosPrivate.patch(`/post/${id}`,
+        JSON.stringify(data),
+        {
+          headers: { 'Content-Type': 'application/json'},
+        });
+      if (!response) throw new Error('Le serveur ne répond pas')
+  
+      const newPost = { id, media, textcontent, UserId, User, ...response.data.Post};
+  
+      reset();
+      edit();
+      toast.success(`Post modifié`)
+      if (postPage) return setPost(newPost);
+      return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
 
-    const response = await axiosPrivate.patch(`/post/${id}`,
-    JSON.stringify(data),
-    {
-      headers: { 'Content-Type': 'application/json'},
-    });
-    if (!response) throw new Error('Le serveur ne répond pas')
+    } catch (error) {
 
-    const newPost = {...post, ...response.data.Post};
-
-    reset();
-    edit();
-    return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
-
+      if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+      navigate('/login', { state: { from: location}, replace: true })
+    }
   }
 
   const updatePostContent = async (formData, id) => {
-
-    const response = await axiosPrivate.patch(`/post/${id}`, 
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data'},
-      }
-    );
+    try {
+      const response = await axiosPrivate.patch(`/post/${id}`, 
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data'},
+        });
     if (!response) throw new Error('Le serveur ne répond pas');
 
-    const newPost = {...post, ...response.data.Post};
+    const newPost = { id, media, textcontent, UserId, User, ...response.data.Post};
 
     reset();
     edit();
+    toast.success(`Post modifié`);
+    if (postPage) return setPost(newPost);
     return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
+
+    } catch (error) {
+      if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+      navigate('/login', { state: { from: location}, replace: true })
+    }
   }
 
   const updatePostText = async (data, id) => {
-    const response = await axiosPrivate.patch(`/post/${id}`,
-    JSON.stringify(data),
-    {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (!response) throw new Error('Le serveur ne répond pas');
+    try {
+      const response = await axiosPrivate.patch(`/post/${id}`,
+        JSON.stringify(data),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        });
+      if (!response) throw new Error('Le serveur ne répond pas');
 
+      const newPost = { id, media, textcontent, UserId, User, ...response.data.Post};
+      
+      reset();
+      edit();
+      toast.success(`Post modifié`)
+      if (postPage) return setPost(newPost);
+      return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
 
-    const newPost = {...post, ...response.data.Post};
-    
-    reset();
-    edit();
-    return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
+    } catch (error) {
+
+      if (error.response.status === 401) toast.warning(`Vous n'êtes pas autorisé à effectuer cette action`);
+      navigate('/login', { state: { from: location}, replace: true })
+    } 
   }
 
-  const onSubmit = async (data) => {
-    try {
+  const onSubmit = (data) => {
 
       if (!data.media) return deletePostImage(data, id);
-
       if (typeof data.media === 'string') return updatePostText(data, id);
 
       for (const key in data) {
@@ -107,11 +129,6 @@ const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPost
       }
 
       return updatePostContent(formData, id);
-
-    } catch (error) {
-      console.log(error);
-      if (error.response?.status === 400) return toast.error(`Remplissez correctement le formulaire du post`);
-    }
   }
 
   const resetImage = () => {
@@ -130,7 +147,7 @@ const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPost
   return (
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
       <div className='items-center gap-2'>
-        <label>Titre du post</label>
+        <label htmlFor='title'>Titre du post</label>
         <input
         {...register('title') } 
           type='text'
@@ -147,8 +164,8 @@ const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPost
         )}
       </div>
 
-      <div className='' >
-        <label className=''>Texte du post</label>
+      <div>
+        <label htmlFor='textcontent'>Texte du post</label>
         <textarea
         {...register('textcontent')}
         type='textarea'
@@ -165,58 +182,60 @@ const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPost
         }
       </div>
       <div className='flex items-center justify-center gap-3'>
-            <div className='py-2 px-3 border rounded border-gray-300 bg-gray-100'>
-              {image ?
-                <PreviewImage file={image} css='h-40 w-40 rounded object-cover' />
+        <div className='py-2 px-3 border rounded border-gray-300 bg-gray-100'>
+          {image ?
+            <PreviewImage file={image} css='h-40 w-40 rounded object-cover' />
+            :
+              currentMedia ? 
+                <img src={media} className='h-40 w-40 rounded object-cover' crossOrigin='anonymous' alt='illustration du post'/>  
                 :
-                  currentMedia ? 
-                    <img src={media} className='h-40 w-40 rounded object-cover' crossOrigin='anonymous' alt='illustration du post'/>  
-                    :
-                    <PhotographIcon className='w-40 h-40 mt-1 text-gray-500' />
-              }
-            </div>
-            <div className='flex flex-col space-y-3'>
-              <div className='flex flex-col relative'>
-                <input
-                  {...register('media')}
-                  type='file'
-                  name='media'
-                  ref={mediaRef}
-                  className='absolute inset-0 opacity-0 cursor-pointer'
-                  aria-describedby='note'
-                  aria-invalid={errors?.media ? true : false}
-                  onChange={ (e) => {
-                    setImage(e.target.files[0]);
-                    setValue('media', e.target.files)
-                  } } 
-                />
-                <button className=' px-3 py-1 rounded-full bg-slate-900 text-white'>{ !currentMedia && !image ? `Ajouter une image` : `Changer d'image`}</button>   
-              </div>
-              {image ? 
-                <button 
-                className='px-3 py-1 bg-slate-900 text-white rounded-full'
-                type='button' 
-                onClick={ () => resetImage() }
-                >
-                  Annuler le changement
-                </button> 
-                : null
-              }
-              {currentMedia ? 
-                <button
-                  className='px-3 py-1 bg-orange-500 text-white rounded-full'
-                  type='button' 
-                  onClick={ () => deleteImage() }
-                >
-                  Supprimer l'image
-                </button> 
-                : null}
-            </div>   
+                <PhotographIcon className='w-40 h-40 mt-1 text-gray-500' />
+          }
+        </div>
+        <div className='flex flex-col space-y-3'>
+          <div className='flex flex-col relative'>
+            <input
+              {...register('media')}
+              type='file'
+              name='media'
+              accept='image/jpg, image/jpeg, image/png, image/webp, image/gif, image/svg'
+              ref={mediaRef}
+              className='absolute inset-0 opacity-0 cursor-pointer'
+              aria-describedby='note'
+              aria-invalid={errors?.media ? true : false}
+              onChange={ (e) => {
+                setImage(e.target.files[0]);
+                setValue('media', e.target.files)
+              } } 
+            />
+            <button className=' px-3 py-1 rounded-full gray-button'>{ !currentMedia && !image ? `Ajouter une image` : `Changer d'image`}</button>   
+          </div>
+          {image ? 
+            <button 
+            className='px-3 py-1 gray-button hover-button rounded-full'
+            type='button' 
+            onClick={ () => resetImage() }
+            >
+              Annuler le changement
+            </button> 
+            : null
+          }
+          {currentMedia ? 
+            <button
+              className='px-3 py-1 rounded-full orange-button hover-button'
+              type='button' 
+              onClick={ () => deleteImage() }
+            >
+              Supprimer l'image
+            </button> 
+            : null
+          }
+        </div>   
       </div>
       <div className='flex items-center gap-2 mt-2'>
         <button 
           type='submit'
-          className='flex-1 w-full rounded-full bg-slate-800 text-white p-2' 
+          className='flex-1 w-full rounded-full gray-button hover-button p-2' 
           disabled={isSubmitting ? true : false}
         > 
           Modifiez le post
