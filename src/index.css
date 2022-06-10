@@ -18,4 +18,29 @@
       focus:border-gray-500
       focus:ring-opacity-20
   }
+  .gray-button {
+    @apply
+      font-semibold
+      text-white
+      bg-groupogris-900
+      border
+      border-groupogris-900
+  }
+  .orange-button {
+    @apply
+      font-semibold
+      text-white
+      bg-grouporange-900
+      border
+      border-grouporange-900
+  }
+  .hover-button {
+    @apply
+      hover:text-black
+      hover:bg-grouporange-100
+      hover:border
+      hover:border-grouporange-900
+      ease-in-out
+      duration-300
+  }
 }

@@ -12,6 +12,16 @@ module.exports = {
       fontFamily: {
         ibm: ['"IBM Plex Sans"', 'sans-serif'],
         noto: ['"Noto Sans"', 'sans-serif'],
+        lato: ['"Lato"', 'sans-serif'],
+      },
+      colors: {
+        grouporange: {
+          100: '#FFD7D7',
+          900: '#FD2D01',
+        },
+        groupogris: {
+          900: '#4E5166'
+        }
       },
     },
   },
