@@ -4,7 +4,7 @@ This project is part of the 7th and last project of the Openclassroom's Web Deve
 
 ## Setup
 
-For this project to work you need to install and run the [Project Groupomania - Back](https://github.com/Eyfie/groupomania-api) part.
+For this project to work you'll need to install and run the [Project Groupomania - Back](https://github.com/Eyfie/groupomania-api) part of it.
 
 ## Installation
 
