@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { ChatAltIcon } from '@heroicons/react/outline';
 
-const CommentWidget = ({ Comments=[], postPage }) => {
+const CommentWidget = ({ Comments=[] }) => {
 
 
   return (
@@ -19,7 +19,6 @@ const CommentWidget = ({ Comments=[], postPage }) => {
 
 CommentWidget.propTypes = {
   Comments: PropTypes.arrayOf(Object),
-  postPage: PropTypes.bool,
 };
 
 export default CommentWidget

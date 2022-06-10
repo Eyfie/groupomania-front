@@ -46,9 +46,10 @@ const Modify = () => {
       });
       if (!response) throw new Error('Le serveur ne répond pas ');
       reset()
+      toast.success(`Mot de passe changé avec succès !`)
       navigate('/login', { replace: true });
       
-      toast.success(`Mot de passe changé avec succès !`)
+      
   
     } catch (error) {
       console.log(error);
@@ -114,7 +115,7 @@ const Modify = () => {
             )}
         </div>
 
-        <button className='mt-5 text-center text-white px-5 p-1 border rounded border-slate-900 bg-slate-900' type='submit'>Envoyer</button>
+        <button className='mt-5 text-center text-white px-5 p-1 border rounded gray-button hover-button' type='submit'>Envoyer</button>
       </form>
     </section>
   )

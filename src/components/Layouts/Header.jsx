@@ -66,7 +66,7 @@ const Header = () => {
             <Link to='/account' className='flex gap-1 items-center text-xs hover:underline'><CogIcon className='h-4 w-4'/> Paramètre de compte</Link>
           </div>
           <hr className='bg-gray-500 text-gray-500 my-2'/>
-          <button onClick={ logOut } className='flex gap-1 items-center text-xs hover:underline text-orange-500'><LogoutIcon className='h-4 w-4' /> Se déconnecter</button>
+          <button onClick={ logOut } className='flex gap-1 items-center text-xs hover:underline text-grouporange-900'><LogoutIcon className='h-4 w-4' /> Se déconnecter</button>
         </nav>
     </header>
   )

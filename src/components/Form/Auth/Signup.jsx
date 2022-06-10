@@ -155,7 +155,7 @@ const onSubmit = async (data) => {
             )}
         </div>
 
-        <button className='mt-5 text-center text-white px-5 p-1 border rounded border-slate-900 bg-slate-900' type='submit'>S'inscrire</button>
+        <button className='mt-5 text-center text-white px-5 p-1 border rounded gray-button hover-button' type='submit'>S'inscrire</button>
       </form>
 
     </section>

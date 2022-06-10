@@ -6,9 +6,15 @@ import PreviewImage from '../../Layouts/PreviewImage';
 import { PhotographIcon } from '@heroicons/react/solid';
 import UserWidget from '../../Widgets/UserWidget';
 import { toast } from 'react-toastify';
-// import { yupResolver } from '@hookform/resolvers/yup';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { InformationCircleIcon } from '@heroicons/react/solid';
+import { commentSchema } from '../../../validations/commentSchema';
 
 const CreateComment = ({ postId, setComments }) => {
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
@@ -21,7 +27,7 @@ const CreateComment = ({ postId, setComments }) => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm({ 
-    // resolver: yupResolver(postSchema),
+    resolver: yupResolver(commentSchema),
     mode: 'onSubmit',
     defaultValues: {
       textcontent: '',
@@ -32,50 +38,50 @@ const CreateComment = ({ postId, setComments }) => {
 
   const onSubmit = async (data) => {
     try {
-
         for (const key in data) {
           if (data[key] === '' || data[key] === null || data[key] === undefined) delete data[key]
         };
-        data = {...data, PostId: parseInt(postId, 10)}
-        if(data.media) {
-        let formData = new FormData();
 
+        data = {...data, PostId: parseInt(postId, 10)}
+
+        if(data.media) {
+
+        let formData = new FormData();
         for (const [key, value] of Object.entries(data)) {
           if (key === 'media') formData.append('media', value[0])
           formData.append(`${key}`, value);
         }
 
         const response = await axiosPrivate.post(`/comment`,
-              formData,
-              {
-                headers: { 'Content-Type': 'multipart/form-data' },
-              });
-
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
         if (!response) throw new Error('Le serveur ne répond pas');
         
-        toast.success('Commentaire créé !')
+        
         reset()
         setImage(null);
-        setComments((prev) => [ ...prev, { ...response.data.Comment, User: auth }]);
+        toast.success('Commentaire créé !')
+        return setComments((prev) => [ ...prev, { ...response.data.Comment, User: auth }]);
       }
 
       const response = await axiosPrivate.post(`/comment`,
-      JSON.stringify(data),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      });
+        JSON.stringify(data),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        });
       if (!response) throw new Error('Le serveur ne répond pas');
 
-      toast.success('Commentaire créé !');
+    
       reset()
       setImage(null)
-      setComments((prev) => [ ...prev, { ...response.data.Comment, User: auth }]);
-
+      toast.success('Commentaire créé !');
+      return setComments((prev) => [ ...prev, { ...response.data.Comment, User: auth }]);
 
     } catch (error) {
       console.log(error);
-      // if (!error.response) setErrorMsg('Le serveur ne répond pas.')
-      // if (error.response?.status) setErrorMsg(`Erreur ${ error.response.status } : ${ error.response.data.message ? error.response.data.message : error.response.statusText }`)
+      navigate('/login', { state: { from: location}, replace: true })
     }
   }
 
@@ -92,7 +98,7 @@ const CreateComment = ({ postId, setComments }) => {
         </div>
         <div className='flex flex-col mob:flex-row gap-3'>
           <div className='flex flex-col flex-1' >
-            <label>Texte du commentaire</label>
+            <label htmlFor='textcontent'>Texte du commentaire</label>
             <textarea
             {...register('textcontent')}
             type='textarea'
@@ -114,12 +120,13 @@ const CreateComment = ({ postId, setComments }) => {
 
               <div className='flex-col space-y-2 justify-center'>
                 <div className='relative flex'>
-                  <button type='button' className='flex-1 bg-slate-900 rounded-full px-3 py-1 text-white'>{image ? `Changer d'image` : 'Ajouter une image'}</button>
+                  <button type='button' className='cursor-pointer flex-1 gray-button rounded-full px-3 py-1 '>{image ? `Changer d'image` : 'Ajouter une image'}</button>
                   <input
                     {...register('media')}
                     type='file'
+                    accept='image/jpg, image/jpeg, image/png, image/webp, image/gif, image/svg'
                     name='media'
-                    className='absolute inset-0 opacity-0 cursor-pointer'
+                    className='absolute inset-0 opacity-0'
                     onChange={ (e) => setImage(e.target.files[0]) } 
                   />
                 </div>
@@ -127,7 +134,7 @@ const CreateComment = ({ postId, setComments }) => {
                 {image && (
                   <div className='flex'>
                     <button 
-                        className='flex-1 bg-orange-500 rounded-full text-white px-3 py-1'
+                        className='flex-1 rounded-full -3 py-1 orange-button hover-button'
                         type='button' 
                         onClick={() => deleteImage()}
                       >
@@ -138,17 +145,22 @@ const CreateComment = ({ postId, setComments }) => {
               </div>
             </div>   
           </div>
+          {errors?.textcontent && errors?.media ? 
+          <div className=' flex items-center space-x-1'>
+            <InformationCircleIcon className='h-4 w-4 text-slate-900' /><p id='note'>{errors.textcontent?.message}</p>
+          </div> : null
+        }
         </div>
         <div className='flex items-center gap-2 mt-2'>
           <button 
             type='submit'
-            className='flex-1 w-full rounded-full bg-slate-800 text-white p-2' 
+            className='flex-1 w-full rounded-full gray-button hover-button p-2' 
             disabled={isSubmitting ? true : false}
           > 
             Créez votre commentaire
           </button>
           <button
-            className='flex-1 w-full rounded-full bg-orange-500 text-white p-2'
+            className='flex-1 w-full rounded-full orange-button hover-button p-2'
             type='button' 
             onClick={() => { 
               reset({ title: '', textcontent: '', media: null});

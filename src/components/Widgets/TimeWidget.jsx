@@ -11,7 +11,7 @@ const TimeWidget = ({ createdAt=new Date(), updatedAt=new Date() }) => {
   const date = createdAt === updatedAt ? createdAt : updatedAt;
   return (
     <>
-      <p className='text-xs text-gray-400'>
+      <p className='text-xs text-gray-400 truncate'>
         <span className='hidden sm:contents'>{createdAt === updatedAt ? 'Publié ' : 'Modifié '}</span>
         <TimeAgo date={date} formatter={formatter} locale='fr' />
       </p>

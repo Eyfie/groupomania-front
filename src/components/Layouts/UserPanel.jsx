@@ -18,7 +18,7 @@ const UserPanel = () => {
           <p className='text-gray-400'>{ auth.firstname } { auth.lastname }</p>
           <p className='mt-2'>{auth.description}</p>
         </div>
-        <Link to='/profil' className='text-center text-white bg-slate-900 p-2 mt-3 w-full rounded-full hover:bg-orange-500 ease-in-out duration-300' >Modifier mon profil</Link>
+        <Link to='/profil' className='text-center gray-button hover-button p-2 mt-3 w-full rounded-full' >Modifier mon profil</Link>
       </div>
     </div>
   )

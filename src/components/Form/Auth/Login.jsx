@@ -102,10 +102,10 @@ const Login = () => {
           </div>
           )}
         </div>
-        <button className='mt-5 text-center text-white px-5 p-1 border rounded border-slate-900 bg-slate-900' type='submit'>Se connecter</button>
+        <button className='mt-5 text-center text-white px-5 p-1 border rounded gray-button hover-button' type='submit'>Se connecter</button>
       </form>
       <div className='mt-2'>
-        <p>Mot de passe oublié ? <Link to='/forgot' className='text-orange-600 hover:underline font-bold'>Changez le !</Link></p>
+        <p>Mot de passe oublié ? <Link to='/forgot' className='text-grouporange-900 hover:underline font-bold'>Changez le !</Link></p>
       </div>
     </section>
   )

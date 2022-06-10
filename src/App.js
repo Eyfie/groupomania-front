@@ -44,20 +44,17 @@ function App() {
 
           {/* Protected routes */}
           <Route element={ <RequireAuth allowedRoles={ ['user', 'moderator'] }/> }>
-
               <Route path='/' element={ <HomePage /> }/>
               <Route path='/'element={ <ProfilPage /> }>
                   <Route path='account' element={ <Account /> }/>
                   <Route path='profil' element={ <Profil /> }/>
               </Route>
-
               <Route path='post'>
                 <Route path=':postId' element={ <PostPage /> }/>
               </Route>
               <Route path='user'>
                 <Route path=':userId' element={ <UserPage /> }/>
               </Route>
-
           </Route>
         </Route>
       </Route>
