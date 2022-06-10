@@ -11,6 +11,7 @@ yup.setLocale({
     }
 });
 
-export const forgotModifySchema = yup.object().shape({
+export const modifySchema = yup.object().shape({
     newpassword: yup.string().min(8).max(24).required(),
+    confirmpassword: yup.string().oneOf([yup.ref('newpassword')], 'Les mots de passes ne correspondent pas !'),
 });

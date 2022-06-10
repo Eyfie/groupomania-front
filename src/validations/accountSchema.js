@@ -14,15 +14,21 @@ yup.setLocale({
 
 //* TODO Put regex password
 exports.accountSchema = yup.object({
-  username: yup.string().min(4),
+  username: yup.string().min(4).transform((value, originalvalue) => {
+    return originalvalue === '' ? undefined : value;
+  }),
   password: yup.string().required(),
-  newpassword: yup.string().min(8).max(24),
-  email: yup.string().email(),
+  newpassword: yup.string().min(8).max(24).transform((value, originalvalue) => {
+    return originalvalue === '' ? undefined : value;
+  }),
+  confirmpassword: yup.string().oneOf([yup.ref('newpassword')], 'Les mots de passes ne correspondent pas !').transform((value, originalvalue) => {
+    return originalvalue === '' ? undefined : value;
+  }),
+  email: yup.string().email().transform((value, originalvalue) => {
+    return originalvalue === '' ? undefined : value;
+  }),
 });
 
-exports.accountDeleteSchema = yup.object({
-  password: yup.string().required(),
-});
 
 exports.profilSchema = yup.object({
   firstname: yup.string(),
