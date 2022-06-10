@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 
 
 
-const EditPost = ({id, title, textcontent, media , edit, setPosts, posts=[] }) => {
+const EditPost = ({id, title, textcontent, media, User=[], UserId, edit, setPosts }) => {
 
   const mediaRef = useRef();
   const axiosPrivate = useAxiosPrivate();
@@ -35,6 +35,8 @@ const EditPost = ({id, title, textcontent, media , edit, setPosts, posts=[] }) =
     }
   })
 
+  const post = {id, title, textcontent, media, User, UserId};
+
   const deletePostImage = async (data, id) => {
 
     const response = await axiosPrivate.patch(`/post/${id}`,
@@ -44,12 +46,11 @@ const EditPost = ({id, title, textcontent, media , edit, setPosts, posts=[] }) =
     });
     if (!response) throw new Error('Le serveur ne répond pas')
 
-    const post = posts.find((post) => post.id === id);
     const newPost = {...post, ...response.data.Post};
 
     reset();
     edit();
-    return setPosts(posts.map(item => item.id === id ? newPost : item));
+    return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
 
   }
 
@@ -63,12 +64,11 @@ const EditPost = ({id, title, textcontent, media , edit, setPosts, posts=[] }) =
     );
     if (!response) throw new Error('Le serveur ne répond pas');
 
-    const post = posts.find((post) => post.id === id);
     const newPost = {...post, ...response.data.Post};
 
     reset();
     edit();
-    return setPosts(posts.map(item => item.id === id ? newPost : item));
+    return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
   }
 
   const updatePostText = async (data, id) => {
@@ -79,12 +79,12 @@ const EditPost = ({id, title, textcontent, media , edit, setPosts, posts=[] }) =
     });
     if (!response) throw new Error('Le serveur ne répond pas');
 
-    const post = posts.find((post) => post.id === id);
+
     const newPost = {...post, ...response.data.Post};
     
     reset();
     edit();
-    return setPosts(posts.map(item => item.id === id ? newPost : item));
+    return setPosts((prev) => prev.map((item) => item.id === id ? newPost : item));
   }
 
   const onSubmit = async (data) => {

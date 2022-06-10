@@ -14,7 +14,7 @@ import EditPost from '../Form/Post/EditPost';
 
 
 
-const Post = ({ link, postPage, id, title, textcontent, media, createdAt, updatedAt, UserId, User=[], Comments=[], Reactions=[], Reports=[], setPosts }) => {
+const Post = ({ link, id, title, textcontent, media, createdAt, updatedAt, UserId, User=[], Comments=[], Reactions=[], Reports=[], setPosts}) => {
 
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
@@ -42,7 +42,7 @@ const Post = ({ link, postPage, id, title, textcontent, media, createdAt, update
             <TimeWidget createdAt={createdAt} updatedAt={updatedAt} />
           </div>
           {editMode ? 
-            <EditPost id={id} title={title} textcontent={textcontent} media={media} edit={modify} setPosts={setPosts}/>
+            <EditPost id={id} title={title} textcontent={textcontent} media={media} User={User} UserId={UserId} edit={modify} setPosts={setPosts}/>
             :
             <ConditionalWrapper 
             condition={link}
@@ -70,9 +70,9 @@ const Post = ({ link, postPage, id, title, textcontent, media, createdAt, update
               condition={link}
               wrapper={children => <Link to={link}>{children}</Link>}
               >
-                <CommentWidget Comments={Comments} postPage={postPage}/>
+                <CommentWidget Comments={Comments} />
               </ConditionalWrapper>
-              <ReactionWidget reactions={reactions} setReactions={setReactions} entity='post' id={id} />
+              <ReactionWidget Reactions={reactions} setReactions={setReactions}  entity='post' id={id} />
             </div>
             { auth.role === 'moderator' || auth.id === UserId ? 
             <div className='flex gap-2 items-center text-gray-500'>
